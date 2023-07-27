@@ -8,6 +8,9 @@ const Body = () => {
                 <span>12+ stays</span>
             </div>
             <Groupe />
+            <div className="foot">
+                created by <b>Jeffred</b> - devChallenges.io
+            </div>
         </body>
     );
 };
