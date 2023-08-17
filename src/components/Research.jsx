@@ -33,7 +33,7 @@ function Select() {
         var part = document.createElement('div')
         part.style = 'height: 146px'
         var voile = document.createElement('div')
-        voile.style = 'background-color: rgba(59, 59, 59, 0.35); position: fixed; bottom: 0px; left:0px; right:0px; top:' + (header.getBoundingClientRect().height + 100) + 'px; @media screen and (max-width: 525px) {top:' + (header.getBoundingClientRect().height + 100) + 'px;}'
+        voile.style = 'background-color: rgba(59, 59, 59, 0.35); position: fixed; bottom: 0px; left:0px; right:0px; top:' + (header.getBoundingClientRect().height + 100) + 'px;'
         voile.onclick = Reload()
         header.after(part)
         header.appendChild(voile)
@@ -44,10 +44,14 @@ function Select() {
         loupe.textContent = 'Search'
         loupe.insertAdjacentHTML("afterbegin", "<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'><path d='M12.5006 11.0006H11.7106L11.4306 10.7306C12.6306 9.33063 13.2506 7.42063 12.9106 5.39063C12.4406 2.61063 10.1206 0.390626 7.32063 0.0506256C3.09063 -0.469374 -0.469374 3.09063 0.0506256 7.32063C0.390626 10.1206 2.61063 12.4406 5.39063 12.9106C7.42063 13.2506 9.33063 12.6306 10.7306 11.4306L11.0006 11.7106V12.5006L15.2506 16.7506C15.6606 17.1606 16.3306 17.1606 16.7406 16.7506C17.1506 16.3406 17.1506 15.6706 16.7406 15.2606L12.5006 11.0006ZM6.50063 11.0006C4.01063 11.0006 2.00063 8.99063 2.00063 6.50063C2.00063 4.01063 4.01063 2.00063 6.50063 2.00063C8.99063 2.00063 11.0006 4.01063 11.0006 6.50063C11.0006 8.99063 8.99063 11.0006 6.50063 11.0006Z' fill='#F2F2F2'/></svg>")
         loupe.parentElement.classList.add('space')
-        /*if (window.innerWidth < 525) {
-            voile.before(loupe)
-        }*/
         active = true
+        if (window.innerWidth < 525) {
+            var bar = document.createElement('div')
+            bar.style = 'display:flex; flex-direction:row; margin: 0 10px'
+            bar.innerHTML = "<span>Edit your search</span><b>X</b>"
+            header.insertAdjacentElement("afterbegin", bar)
+            //document.querySelector('.header > div:first-child b').onclick = Reload()
+        }
     }
 }
 
@@ -64,6 +68,23 @@ function list(element, country, value) {
 
 var activeL = false
 var activeG = false
+var phoned = false
+
+function phone() {
+    if (window.innerWidth < 525 && phoned == false) {
+        var loupe = document.querySelector('.loupe > div')
+        loupe.style.margin = 'auto'
+        document.querySelector('.header').insertAdjacentElement('beforeend', loupe)
+        phoned = true
+    }
+}
+
+function delPhone() {
+    if (phoned == true) {
+        document.querySelector('.loupe').appendChild(document.querySelector('.h > div:last-child'))
+        phoned = false
+    }
+}
 
 export function Location() {
     Select()
@@ -76,6 +97,7 @@ export function Location() {
         header.appendChild(ul)
         countries.map((country, index) => (list(ul, country, index)))
         activeL = true
+        phone()
     }
 }
 
@@ -97,6 +119,7 @@ export function Guest() {
         ]
         persons.map((person, index) => (critere(person.title, person.comment, index)))
         activeG = true
+        phone()
     }
 }
 
@@ -172,6 +195,7 @@ function closeLocation() {
         var ul = document.querySelector('header ul')
         ul.parentNode.removeChild(ul)
         activeL = false
+        delPhone()
     }
 }
 
@@ -184,6 +208,7 @@ function closeGuest() {
             g[index].parentNode.removeChild(g[index])
         }
         activeG = false
+        delPhone()
     }
 }
 
@@ -205,11 +230,14 @@ export function Reload() {
         noTitles(guest)
         var loupe = document.querySelector('.loupe > div')
         loupe.classList.remove('loupes')
-        loupe.removeChild(loupe.querySelector('span'))
+        loupe.innerHTML = "<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'> <path d='M12.5006 11.0006H11.7106L11.4306 10.7306C12.6306 9.33063 13.2506 7.42063 12.9106 5.39063C12.4406 2.61063 10.1206 0.390626 7.32063 0.0506256C3.09063 -0.469374 -0.469374 3.09063 0.0506256 7.32063C0.390626 10.1206 2.61063 12.4406 5.39063 12.9106C7.42063 13.2506 9.33063 12.6306 10.7306 11.4306L11.0006 11.7106V12.5006L15.2506 16.7506C15.6606 17.1606 16.3306 17.1606 16.7406 16.7506C17.1506 16.3406 17.1506 15.6706 16.7406 15.2606L12.5006 11.0006ZM6.50063 11.0006C4.01063 11.0006 2.00063 8.99063 2.00063 6.50063C2.00063 4.01063 4.01063 2.00063 6.50063 2.00063C8.99063 2.00063 11.0006 4.01063 11.0006 6.50063C11.0006 8.99063 8.99063 11.0006 6.50063 11.0006Z' fill='#EB5757'/></svg>"
         loupe.parentElement.classList.remove('space')
-        document.querySelector('.body').classList.remove('b')
+        //document.querySelector('.body').classList.remove('b')
         document.querySelector('.header > div:last-child').parentNode.removeChild(document.querySelector('.header > div:last-child'))
         active = false
+        if (window.innerWidth < 525) {
+            document.querySelector('header > div:first-child').parentNode.removeChild(document.querySelector('header > div:first-child'))
+        }
     }
 }
 
